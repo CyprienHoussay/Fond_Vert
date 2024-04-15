@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        #map {
+            width: 1350px;
+            height: 801px;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/a_reg2022_1.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[42.84378761567213,3.373326519834642],[45.17703882629094,8.84767957437021]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        document.querySelector(".leaflet-popup-pane").addEventListener("load", function(event) {
+          var tagName = event.target.tagName,
+            popup = map._popup;
+          // Also check if flag is already set.
+          if (tagName === "IMG" && popup && !popup._updated) {
+            popup._updated = true; // Set flag to prevent looping.
+            popup.update();
+          }
+        }, true);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_CartoVoyagerNoLabels_0');
+        map.getPane('pane_CartoVoyagerNoLabels_0').style.zIndex = 400;
+        var layer_CartoVoyagerNoLabels_0 = L.tileLayer('https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}@2x.png', {
+            pane: 'pane_CartoVoyagerNoLabels_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_CartoVoyagerNoLabels_0;
+        map.addLayer(layer_CartoVoyagerNoLabels_0);
+        function pop_a_reg2022_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">reg</th>\
+                        <td class="visible-with-data" id="reg">' + (feature.properties['reg'] !== null ? autolinker.link(feature.properties['reg'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+            var popup = layer.getPopup();
+            var content = popup.getContent();
+            var updatedContent = removeEmptyRowsFromPopupContent(content, feature);
+            popup.setContent(updatedContent);
+        }
+
+        function style_a_reg2022_1_0(feature) {
+            switch(String(feature.properties['reg'])) {
+                case '[\'01\', \'02\', \'03\', \'04\', \'06\']':
+                    return {
+                pane: 'pane_a_reg2022_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '15.0,3.0',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 3.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(206,98,40,0.0)',
+                interactive: true,
+            }
+                    break;
+                case '[\'11\', \'24\', \'27\', \'28\', \'32\', \'44\', \'52\', \'53\', \'75\', \'76\', \'84\', \'93\', \'94\']':
+                    return {
+                pane: 'pane_a_reg2022_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '15.0,3.0',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 3.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(27,57,209,0.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_a_reg2022_1');
+        map.getPane('pane_a_reg2022_1').style.zIndex = 401;
+        map.getPane('pane_a_reg2022_1').style['mix-blend-mode'] = 'normal';
+        var layer_a_reg2022_1 = new L.geoJson(json_a_reg2022_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_a_reg2022_1',
+            layerName: 'layer_a_reg2022_1',
+            pane: 'pane_a_reg2022_1',
+            onEachFeature: pop_a_reg2022_1,
+            style: style_a_reg2022_1_0,
+        });
+        bounds_group.addLayer(layer_a_reg2022_1);
+        map.addLayer(layer_a_reg2022_1);
+        setBounds();
+        </script>
+    </body>
+</html>
